@@ -29,47 +29,35 @@ export default function UserSearchbar() {
     }, []);
 
     return (
-      <div
-        className="user-searchbar"
-        style={{ display: "flex", alignItems: "center" }}
-      >
-        <input
-          type="text"
-          placeholder="Buscar"
-          style={{ height: "24px", backgroundColor: "white", width: "300px", color: "black"}}
-        />
-        <button
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: "#0c4a6e",
-            color: "white",
-            border: "none",
-            padding: "5px 8px",
-            cursor: "pointer",
-          }}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="size-6"
-            width="24"
-            height="24"
+        <div className="flex flex-col items-center">
+        <div className="flex items-center mb-4">
+          <input
+            type="text"
+            placeholder="Buscar"
+            className="h-6 bg-white w-72 text-black mr-2"
+          />
+          <button
+            className="flex items-center justify-center bg-blue-800 text-white border-none p-1 cursor-pointer"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-            />
-          </svg>
-        </button >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+              />
+            </svg>
+          </button>
+        </div>
         {users.map((user) => 
           <DataTable
-            key={user.index}
+            key={ user.id }
             username={ user.username }
             firstName={ user.firstname }
             lastName={user.lastName}

@@ -13,15 +13,17 @@ interface DataTableProps {
 
 export default function index({ username, lastName, firstName, email, active, onUpdate, onDetails, onDelete }: DataTableProps) {
   return (
-    <div>
-      <span className='username'>{username}</span>
-      <span className='firstName'>{firstName}</span>
-      <span className='lastName'>{lastName}</span>
-      <span className='email'>{email}</span>
-      <span className='active'>{active}</span>
-      <button className='updateBtn' onClick={onUpdate}>Update</button>
-      <button className='detailsBtn' onClick={onDetails}>Details</button>
-      <button className='deleteBtn' onClick={onDelete}>Delete</button>
-    </div>
+    <tr>
+    <td>{username}</td>
+    <td>{firstName}</td>
+    <td>{lastName}</td>
+    <td>{email}</td>
+    <td>{active}</td>
+    <td>
+      <button onClick={onUpdate}>Update</button>
+      <button onClick={onDetails}>Details</button>
+      <button onClick={onDelete}>Delete</button>
+    </td>
+  </tr>
   )
 }
