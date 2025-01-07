@@ -1,22 +1,32 @@
 import { useEffect, useState } from "react";
+import DataTable from '../DataTable'
+import { getAll, fetchById, fetchByName } from '../../Utils/API'
 
-function userSearchbar() {
-  function userSearchbar() {
-    const [users, setUsers] = useState([]);
+export default function UserSearchbar() {
+    interface User {
+      index: number
+      id: string;
+      username: string
+      firstname: string;
+      lastName: string;
+      email: string;
+      active: boolean;
+    }
+
+    const [users, setUsers] = useState<User[]>([]);
 
     useEffect(() => {
-      fetchUsers();
+      const fetchData = async () => {
+        try {
+          const allUsers = await getAll();
+          setUsers(allUsers);
+        } catch (error) {
+          console.error("Erro ao buscar usuários:", error);
+        }
+      };
+  
+      fetchData();
     }, []);
-
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch("/api/users");
-        const data = await response.json();
-        setUsers(data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
 
     return (
       <div
@@ -26,7 +36,7 @@ function userSearchbar() {
         <input
           type="text"
           placeholder="Buscar"
-          style={{ height: "24px", backgroundColor: "white", width: "300px" }}
+          style={{ height: "24px", backgroundColor: "white", width: "300px", color: "black"}}
         />
         <button
           style={{
@@ -56,9 +66,21 @@ function userSearchbar() {
               d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
             />
           </svg>
-        </button>
+        </button >
+        {users.map((user) => 
+          <DataTable
+            key={user.index}
+            username={ user.username }
+            firstName={ user.firstname }
+            lastName={user.lastName}
+            email={user.email}
+            active={user.active ? "Active" : "Inactive"}
+            onUpdate={() => console.log(`Update ${user.id}`)}
+            onDetails={() => console.log(`Details ${user.id}`)}
+            onDelete={() => console.log(`Delete ${user.id}`)}
+          />
+        )}
+
       </div>
     );
   }
-}
-export default userSearchbar;

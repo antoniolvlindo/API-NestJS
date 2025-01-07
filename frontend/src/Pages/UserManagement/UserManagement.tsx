@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import UserSearchBar from '../../components'
+import UserSearchBar from '../../components/UserSearchBar/userSearchBar'
 
 export default function UserManagement() {
   const [search, setSearch] = useState(false);
@@ -13,7 +13,9 @@ export default function UserManagement() {
       <button onClick={handleSearchButton}>
         Usurários
       </button>
+      <div>
       { search && <UserSearchBar /> }
+      </div>
     </div>
   )
 }

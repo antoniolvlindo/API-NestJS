@@ -5,7 +5,7 @@ import UserManagement from './Pages/UserManagement/UserManagement'
 function App() {
   return (
     <Routes>
-      <Route path="/ " element={ <UserManagement /> }/>
+      <Route path="/" element={ <UserManagement /> }/>
     </Routes>
   )
 }
