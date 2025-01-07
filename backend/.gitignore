@@ -1,0 +1,25 @@
+# Diretórios do Node.js
+node_modules/
+dist/
+logs/
+temp/
+
+# Configurações de ambiente
+.env
+.env.*
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Configurações do Editor
+.idea/
+.vscode/
+*.swp
+
+# Arquivos de cache e compilação
+*.log
+*.tsbuildinfo
+
+# Git
+.git/
