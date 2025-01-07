@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import DataTable from '../DataTable'
 import { getAll, fetchById, fetchByName } from '../../Utils/API'
+import { Navigate, useNavigate } from "react-router-dom";
+
 
 export default function UserSearchbar() {
     interface User {
@@ -12,6 +14,7 @@ export default function UserSearchbar() {
       email: string;
       active: boolean;
     }
+
 
     const [users, setUsers] = useState<User[]>([]);
 
@@ -58,6 +61,7 @@ export default function UserSearchbar() {
         {users.map((user) => 
           <DataTable
             key={ user.id }
+            id={ user.id }
             username={ user.username }
             firstName={ user.firstname }
             lastName={user.lastName}
