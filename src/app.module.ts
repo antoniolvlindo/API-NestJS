@@ -15,7 +15,7 @@ import { User } from './users/entities/user.entity';
       password: '835247',
       database: 'nestJS',
       entities: [User],
-      synchronize: true,
+      synchronize: false,
     }),
     UsersModule,
   ],
