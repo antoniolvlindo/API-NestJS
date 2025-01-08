@@ -1,21 +1,30 @@
-version: '3'
+version: '3.8'
 services:
-  backend:
-    build: ./backend
-    ports:
-      - "3000:3000"
+  db:
+    image: postgres:13
+    container_name: postgres
     environment:
-      - NODE_ENV=development
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 835247
+      POSTGRES_DB: nestjs
+    ports:
+      - '5432:5432'
     volumes:
-      - ./backend:/app
-    command: npm run start:dev
+      - postgres_data:/var/lib/postgresql/data
 
-  frontend:
-    build: ./frontend
-    ports:
-      - "3001:3000"
+  backend:
+    build: .
+    container_name: nestjs_backend
     environment:
-      - REACT_APP_BACKEND_URL=http://localhost:3000
-    volumes:
-      - ./frontend:/app
-    command: npm run dev
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: 835247
+      DATABASE_NAME: nestjs
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
