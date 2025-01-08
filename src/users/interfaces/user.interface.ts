@@ -5,7 +5,6 @@ export interface UserInterface {
   lastName: string;
   username: string;
   password: string;
-  salt: string;
   active: boolean;
   //userRoles?: UserRoleInterface[];
 }
