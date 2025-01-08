@@ -1,9 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryColumn } from "typeorm";
 import { UserInterface } from '../interfaces';
 
 @Entity()
 export class User implements UserInterface {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn('cuid')
   id: string;
 
   @Column({ unique: true })
