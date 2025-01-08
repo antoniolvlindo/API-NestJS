@@ -3,7 +3,7 @@ import { UserInterface } from '../interfaces';
 
 @Entity()
 export class User implements UserInterface {
-  @PrimaryColumn('cuid')
+  @PrimaryColumn('uuid')
   id: string;
 
   @Column({ unique: true })
