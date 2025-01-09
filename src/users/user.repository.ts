@@ -46,6 +46,9 @@ export class UserRepository {
 
     public update(id: string, UpdateUserDto: UpdateUserDto){
         const user = this.findOne(id);
+        if (UpdateUserDto.username) {
+            user.username = UpdateUserDto.username;
+        }
         if (UpdateUserDto.firstName) {
             user.firstName = UpdateUserDto.firstName;
         }
@@ -54,6 +57,9 @@ export class UserRepository {
         }
         if (UpdateUserDto.email) {
             user.email = UpdateUserDto.email;
+        }
+        if (UpdateUserDto.active !== undefined) {
+            user.active = UpdateUserDto.active;
         }
         return user;
     }

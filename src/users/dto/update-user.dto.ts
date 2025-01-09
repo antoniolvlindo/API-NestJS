@@ -1,8 +1,9 @@
 import { UserUpdatableInterface } from "../interfaces";
 
 export class UpdateUserDto implements UserUpdatableInterface {
+    username?: string;
     firstName?: string;
     lastName?: string;
-    active?: boolean;
     email?: string;
+    active?: boolean;
 }
