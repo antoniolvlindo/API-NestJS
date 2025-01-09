@@ -4,14 +4,15 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { UserRepository } from './user.repository';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
   constructor(private userRepository: UserRepository) {}
 
-  public create(createUser: CreateUserDto): User {
-    return this.userRepository.create(createUser);
-    
+  public async create(createUser: CreateUserDto): Promise<User> {
+    const hashPassword = await bcrypt.hash(createUser.password, 10);
+    return this.userRepository.create({...createUser, password: hashPassword} );
   }
 
   findAll() {
