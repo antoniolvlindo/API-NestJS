@@ -44,22 +44,22 @@ export class UserRepository {
         return user;
     }
 
-    public update(id: string, UpdateUserDto: UpdateUserDto){
+    public update(id: string, updateUserDto: UpdateUserDto): User {
         const user = this.findOne(id);
-        if (UpdateUserDto.username) {
-            user.username = UpdateUserDto.username;
+        if (updateUserDto.username) {
+          user.username = updateUserDto.username;
         }
-        if (UpdateUserDto.firstName) {
-            user.firstName = UpdateUserDto.firstName;
+        if (updateUserDto.firstName) {
+          user.firstName = updateUserDto.firstName;
         }
-        if (UpdateUserDto.lastName) {
-            user.lastName = UpdateUserDto.lastName;
+        if (updateUserDto.lastName) {
+          user.lastName = updateUserDto.lastName;
         }
-        if (UpdateUserDto.email) {
-            user.email = UpdateUserDto.email;
+        if (updateUserDto.email) {
+          user.email = updateUserDto.email;
         }
-        if (UpdateUserDto.active !== undefined) {
-            user.active = UpdateUserDto.active;
+        if (updateUserDto.active !== undefined) {
+          user.active = updateUserDto.active;
         }
         return user;
     }

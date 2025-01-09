@@ -22,7 +22,7 @@ export class UsersService {
     return this.userRepository.findOne(id);
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
+  update(id: string, updateUserDto: UpdateUserDto): User {
     return this.userRepository.update(id, updateUserDto);
   }
 
