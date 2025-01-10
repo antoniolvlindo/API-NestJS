@@ -16,6 +16,14 @@ export class UserRepository {
       return user;
     }
 
+    public findByUsername(username: string): User {
+      const user = this.users.find(user => user.username === username);
+      if (!user) {
+        throw new NotFoundException(`User with username ${username} not found`);
+      }
+      return user;
+    }
+
     private convertToUser(createUser: CreateUserDto): User {
         const user = new User();
         user.username = createUser.username;

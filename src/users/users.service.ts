@@ -15,6 +15,14 @@ export class UsersService {
   ) {}
 
   public async create(createUser: CreateUserDto): Promise<User> {
+    const emailExists = this.userRepository.findByEmail(createUser.email);
+    if (emailExists) {
+      throw new UnauthorizedException('Email já cadastrado');
+    }
+    const usernameExists = this.userRepository.findByUsername(createUser.username);
+    if (usernameExists) {
+      throw new UnauthorizedException('Username já cadastrado');
+    }
     const hashPassword = await bcrypt.hash(createUser.password, 10);
     return this.userRepository.create({ ...createUser, password: hashPassword });
   }
