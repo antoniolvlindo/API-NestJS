@@ -15,11 +15,11 @@ export class UsersService {
   ) {}
 
   public async create(createUser: CreateUserDto): Promise<User> {
-    const emailExists = this.userRepository.findByEmail(createUser.email);
+    const emailExists = this.userRepository.findByEmailCreate(createUser.email);
     if (emailExists) {
       throw new UnauthorizedException('Email já cadastrado');
     }
-    const usernameExists = this.userRepository.findByUsername(createUser.username);
+    const usernameExists = this.userRepository.findByUsernameCreate(createUser.username);
     if (usernameExists) {
       throw new UnauthorizedException('Username já cadastrado');
     }

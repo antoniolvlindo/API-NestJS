@@ -16,6 +16,14 @@ export class UserRepository {
       return user;
     }
 
+    public findByEmailCreate(email: string): User | undefined {
+      return this.users.find(user => user.email === email);
+    }
+
+    public findByUsernameCreate(username: string): User | undefined {
+      return this.users.find(user => user.username === username);
+    }
+
     public findByUsername(username: string): User {
       const user = this.users.find(user => user.username === username);
       if (!user) {
