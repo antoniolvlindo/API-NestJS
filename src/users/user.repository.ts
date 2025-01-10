@@ -7,9 +7,13 @@ import { randomBytes, randomUUID } from 'crypto';
 
 @Injectable()
 export class UserRepository {
-    public users: User[];
-    constructor() {
-        this.users = [];
+    private users: User[] = [];
+    public findByEmail(email: string): User {
+      const user = this.users.find(user => user.email === email);
+      if (!user) {
+        throw new NotFoundException(`User with email ${email} not found`);
+      }
+      return user;
     }
 
     private convertToUser(createUser: CreateUserDto): User {
@@ -24,11 +28,10 @@ export class UserRepository {
     }
 
     public create(createUser: CreateUserDto): User {
-        const user = this.convertToUser(createUser);
-        user.id = randomUUID();
-        this.users.push(user);
-        return user;
-       
+      const user = this.convertToUser(createUser);
+      user.id = randomUUID();
+      this.users.push(user);
+      return user;
     }
 
 

@@ -31,4 +31,9 @@ export class UsersController {
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
+
+  @Post('login')
+  async login(@Body() { email, password }: { email: string; password: string }) {
+    return this.usersService.login(email, password);
+  }
 }
