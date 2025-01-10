@@ -20,15 +20,15 @@ export class UsersService {
   }
 
   public async login(email: string, password: string) {
-  const user = this.userRepository.findByEmail(email);
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    throw new UnauthorizedException('Credenciais inválidas');
+    const user = this.userRepository.findByEmail(email);
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      throw new UnauthorizedException('Credenciais inválidas');
+    }
+    const payload = { sub: user.id, email: user.email };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
-  const payload = { sub: user.id, email: user.email };
-  return {
-    access_token: this.jwtService.sign(payload),
-  };
-}
 
   findAll() {
     return this.userRepository.findAll();
