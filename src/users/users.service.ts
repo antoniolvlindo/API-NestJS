@@ -6,6 +6,7 @@ import { User } from './entities/user.entity';
 import { UserRepository } from './user.repository';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { UserQueryDTO } from './dto/user-query.dto';
 
 @Injectable()
 export class UsersService {
@@ -52,5 +53,9 @@ export class UsersService {
 
   remove(id: string) {
    return this.userRepository.remove(id);
+  }
+
+  public search(query: UserQueryDTO): User[] {
+    return this.userRepository.userSearch(query);
   }
 }
