@@ -39,6 +39,15 @@ export class UsersService {
     };
   }
 
+  public async createBulk(createUsersDto: CreateUserDto[]): Promise<User[]> {
+    const createdUsers: User[] = [];
+    for (const userDto of createUsersDto) {
+      const user = await this.create(userDto);
+      createdUsers.push(user);
+    }
+    return createdUsers;
+  }
+
   findAll() {
     return this.userRepository.findAll();
   }

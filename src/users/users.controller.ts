@@ -13,6 +13,11 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  @Post('bulk')
+  createBulk(@Body() createUsersDto: CreateUserDto[]) {
+    return this.usersService.createBulk(createUsersDto);
+  }
+
   @Get('search')
   async search(@Query() query: UserQueryDTO) {
     return this.usersService.search(query);
