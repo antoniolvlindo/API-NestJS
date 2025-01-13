@@ -1,3 +1,13 @@
+name: Terraform CI/CD
+
+on:
+  push:
+    branches: [ "main" ] # Executa o workflow em pushes para a branch main
+  pull_request:          # Também executa o workflow em pull requests
+
+permissions:
+  contents: read
+
 jobs:
   terraform:
     name: Apply Terraform Configuration
