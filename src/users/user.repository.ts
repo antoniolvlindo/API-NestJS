@@ -5,10 +5,18 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { randomBytes, randomUUID } from 'crypto';
 import { UserQueryDTO } from './dto/user-query.dto';
+import { Brackets, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UserRepository {
+  constructor(
+    @InjectRepository(User)
+      private readonly repo: Repository<User>,
+    ) {}
+
     private users: User[] = [];
+  
     public findByEmail(email: string): User {
       const user = this.users.find(user => user.email === email);
       if (!user) {
@@ -31,6 +39,56 @@ export class UserRepository {
         throw new NotFoundException(`User with username ${username} not found`);
       }
       return user;
+    }
+
+    public async findAllWithFilters(
+      filters: UserQueryDTO,
+    ): Promise<{
+      data: User[];
+      total: number;
+      page: number;
+      limit: number;
+    }> {
+      const { pageIndex, pageSize, sortBy, sortOrder, searchTerm } = filters;
+  
+      const currentPage = parseInt(pageIndex, 10) > 0 ? parseInt(pageIndex, 10) : 1;
+      const recordsPerPage = parseInt(pageSize, 10) > 0 ? parseInt(pageSize, 10) : 10;
+      const skip = (currentPage - 1) * recordsPerPage;
+  
+      // Cria o query builder
+      const queryBuilder = this.repo.createQueryBuilder('user');
+  
+      // Exemplo: Filtra apenas usuários ativos
+      queryBuilder.where('user.active = :active', { active: true });
+  
+      // Filtro de busca
+      if (searchTerm) {
+        queryBuilder.andWhere(
+          new Brackets((qb) => {
+            qb.where('user.username ILIKE :searchTerm', { searchTerm: `%${searchTerm}%` })
+              .orWhere('user.email ILIKE :searchTerm', { searchTerm: `%${searchTerm}%` })
+              .orWhere('user.firstName ILIKE :searchTerm', { searchTerm: `%${searchTerm}%` })
+              .orWhere('user.lastName ILIKE :searchTerm', { searchTerm: `%${searchTerm}%` });
+          }),
+        );
+      }
+  
+      // Conta total de usuários
+      const totalRecords = await queryBuilder.getCount();
+  
+      // Ordenação, paginação e retorno
+      const users = await queryBuilder
+        .orderBy(`user.${sortBy || 'createdAt'}`, sortOrder?.toUpperCase() === 'ASC' ? 'ASC' : 'DESC')
+        .skip(skip)
+        .take(recordsPerPage)
+        .getMany();
+  
+      return {
+        data: users,
+        total: totalRecords,
+        page: currentPage,
+        limit: recordsPerPage,
+      };
     }
 
     private convertToUser(createUser: CreateUserDto): User {

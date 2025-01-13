@@ -60,6 +60,10 @@ export class UsersService {
     };
   }
 
+  public async findAllWithFilters(query: UserQueryDTO) {
+    return this.userRepository.findAllWithFilters(query);
+  }
+
   findOne(id: string): User {
     return this.userRepository.findOne(id);
   }

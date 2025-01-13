@@ -13,6 +13,11 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  @Get('filter')
+  findAllFiltered(@Query() query: UserQueryDTO) {
+    return this.usersService.findAllWithFilters(query);
+  }
+
   @Post('bulk')
   createBulk(@Body() createUsersDto: CreateUserDto[]) {
     return this.usersService.createBulk(createUsersDto);
