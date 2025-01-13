@@ -51,6 +51,13 @@ export class UserRepository {
       return user;
     }
 
+    public findAllPaginated(page: number, limit: number): [User[], number] {
+      const start = (page - 1) * limit;
+      const end = start + limit;
+      const result = this.users.slice(start, end);
+      return [result, this.users.length];
+    }
+
 
     public findAll(): User[] {
         return this.users;

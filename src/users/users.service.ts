@@ -48,8 +48,16 @@ export class UsersService {
     return createdUsers;
   }
 
-  findAll() {
-    return this.userRepository.findAll();
+  findAll({ page, limit }: { page: number; limit: number }) {
+    const [result, total] = this.userRepository.findAllPaginated(page, limit);
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data: result,
+      total,
+      page,
+      totalPages,
+    };
   }
 
   findOne(id: string): User {
