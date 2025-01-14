@@ -10,6 +10,13 @@ import { UserQueryDTO } from './dto/user-query.dto';
 
 @Injectable()
 export class UsersService {
+  public async findAllPaginated(
+    page: number = 1,
+    limit: number = 10,
+  ) {
+    return this.userRepository.findAllWithPagination(page, limit);
+  }
+  
   constructor(
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,

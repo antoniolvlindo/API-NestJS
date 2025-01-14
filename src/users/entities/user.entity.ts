@@ -1,9 +1,10 @@
-import { Entity, Column, PrimaryColumn } from "typeorm";
+import { Entity, Column, PrimaryColumn, BeforeInsert } from "typeorm";
 import { UserInterface } from '../interfaces';
+import { createId } from '@paralleldrive/cuid2';
 
-@Entity()
+@Entity('users')
 export class User implements UserInterface {
-  @PrimaryColumn('uuid')
+  @PrimaryColumn('varchar')
   id: string;
 
   @Column({ unique: true })
@@ -23,4 +24,9 @@ export class User implements UserInterface {
 
   @Column({ default: true})
   active: boolean
+
+  @BeforeInsert()
+  generateId() {
+    this.id = createId();
+  }
 }

@@ -102,11 +102,9 @@ export class UserRepository {
         return user;
     }
 
-    public create(createUser: CreateUserDto): User {
-      const user = this.convertToUser(createUser);
-      user.id = randomUUID();
-      this.users.push(user);
-      return user;
+    public async create(createUser: CreateUserDto): Promise<User> {
+      const user = this.repo.create(createUser);
+      return await this.repo.save(user);
     }
 
     public findAllPaginated(page: number, limit: number): [User[], number] {
@@ -114,6 +112,37 @@ export class UserRepository {
       const end = start + limit;
       const result = this.users.slice(start, end);
       return [result, this.users.length];
+    }
+
+    public async findAllWithPagination(
+      page: number = 1,
+      limit: number = 10,
+    ): Promise<{
+      data: User[];
+      totalPages: number;
+      currentPage: number;
+      totalItems: number;
+    }> {
+      const skip = (page - 1) * limit;
+    
+      // Obtém o total de registros
+      const totalItems = await this.repo.count();
+    
+      // Calcula o total de páginas
+      const totalPages = Math.ceil(totalItems / limit);
+    
+      // Busca os dados com paginação
+      const data = await this.repo.find({
+        skip,
+        take: limit,
+      });
+    
+      return {
+        data,
+        totalPages,
+        currentPage: page,
+        totalItems,
+      };
     }
 
 
