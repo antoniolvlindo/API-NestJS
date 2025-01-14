@@ -1,25 +1,18 @@
 version: '3.8'
+
 services:
   db:
     image: postgres:13
-    container_name: postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 835247
       POSTGRES_DB: nestjs
     ports:
-      - '5432:5432'
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - "5432:5432"
+    # Sem volumes para não persistir os dados
 
   backend:
     build: .
-    container_name: nestjs_backend
     environment:
       DATABASE_HOST: db
       DATABASE_PORT: 5432
@@ -27,10 +20,11 @@ services:
       DATABASE_PASSWORD: 835247
       DATABASE_NAME: nestjs
     ports:
-      - '3000:3000'
+      - "3000:3000"
     depends_on:
-      db:
-        condition: service_healthy
-
-volumes:
-  postgres_data:
+      - db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h db -p 5432 -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
