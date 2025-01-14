@@ -71,17 +71,18 @@ export class UsersService {
     return this.userRepository.findAllWithFilters(query);
   }
 
-  findOne(id: string): User {
-    return this.userRepository.findOne(id);
+public async findOne (id:string): Promise<User> {
+  return await this.userRepository.findOne(id);
+}
+
+  public async update(id: string, updateUser: UpdateUserDto): Promise<User> {
+    return await this.userRepository.update(id, updateUser);
   }
 
-  update(id: string, updateUserDto: UpdateUserDto): User {
-    return this.userRepository.update(id, updateUserDto);
-  }
 
-  remove(id: string) {
-   return this.userRepository.remove(id);
-  }
+ public async remove(id: string): Promise<void> {
+    return await this.userRepository.remove(id);
+ }
 
   public search(query: UserQueryDTO): User[] {
     return this.userRepository.userSearch(query);

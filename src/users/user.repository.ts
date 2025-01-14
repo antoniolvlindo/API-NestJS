@@ -150,38 +150,28 @@ export class UserRepository {
         return this.users;
     }
 
-    public findOne(id: String) : User{
-        const user = this.users.find((user => user.id === id));
+    public async findOne(id: string): Promise<User> {
+      const user = await this.repo.findOne({ where: { id } });
+      if (!user) {
+        throw new NotFoundException(`User with id ${id} not found`);
+      }
+      return user;
+    }
+
+    public async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+        const user = await this.repo.findOne({where: {id}});
         if (!user) {
             throw new NotFoundException(`User with id ${id} not found`);
         }
-        return user;
+        Object.assign(user, updateUserDto);
+        return await this.repo.save(user);
     }
 
-    public update(id: string, updateUserDto: UpdateUserDto): User {
-        const user = this.findOne(id);
-        if (updateUserDto.username) {
-          user.username = updateUserDto.username;
-        }
-        if (updateUserDto.firstName) {
-          user.firstName = updateUserDto.firstName;
-        }
-        if (updateUserDto.lastName) {
-          user.lastName = updateUserDto.lastName;
-        }
-        if (updateUserDto.email) {
-          user.email = updateUserDto.email;
-        }
-        if (updateUserDto.active !== undefined) {
-          user.active = updateUserDto.active;
-        }
-        return user;
-    }
-
-    public remove(id: string){
-        const index = this.users.findIndex((prop) => prop.id === id);
-        if (index > 0 ) throw new NotFoundException(`User with id ${id} not found`);
-        this.users.splice(index, 1);
+    public async remove(id: string): Promise<void> {
+      const result = await this.repo.delete(id);
+      if (result.affected === 0) {
+        throw new NotFoundException(`User with id ${id} not found`);
+      }
     }
 
     public userSearch(query: UserQueryDTO): User[] {
