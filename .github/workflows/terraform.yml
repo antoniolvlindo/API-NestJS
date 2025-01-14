@@ -1,40 +1,28 @@
-# name: Terraform CI/CD
+name: Deploy to Vercel
 
-# on:
-#   push:
-#     branches: [ "main" ] # Executa o workflow em pushes para a branch main
-#   pull_request:          # Também executa o workflow em pull requests
+on:
+  push:
+    branches:
+      - main
 
-# permissions:
-#   contents: read
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
 
-# jobs:
-#   terraform:
-#     name: Apply Terraform Configuration
-#     runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-#     steps:
-#     - name: Checkout Repository
-#       uses: actions/checkout@v4
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v1
 
-#     - name: Setup Terraform
-#       uses: hashicorp/setup-terraform@v2
+    - name: Initialize Terraform
+      run: terraform init
 
-#     - name: Terraform Init
-#       run: terraform init
-#       env:
-#         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-#     - name: Terraform Plan
-#       run: terraform plan -input=false
-#       env:
-#         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-#     - name: Terraform Apply
-#       if: github.ref == 'refs/heads/main'
-#       run: terraform apply -auto-approve -input=false
-#       env:
-#         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    - name: Apply Terraform
+      env:
+        VERCEL_API_TOKEN: ${{ secrets.VERCEL_API_TOKEN }}
+        VERCEL_PROJECT_NAME: ${{ secrets.VERCEL_PROJECT_NAME }}
+        GITHUB_REPO_ID: ${{ secrets.REPO_ID }}
+        GITHUB_BRANCH: ${{ secrets.BRANCH }}
+      run: terraform apply -auto-approve -var "vercel_api_token=$VERCEL_API_TOKEN" -var "vercel_project_name=$VERCEL_PROJECT_NAME" -var "github_repo_id=$REPO_ID" -var "github_branch=$BRANCH"
