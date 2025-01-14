@@ -25,4 +25,4 @@ jobs:
         VERCEL_PROJECT_NAME: ${{ secrets.VERCEL_PROJECT_NAME }}
         GITHUB_REPO_ID: ${{ secrets.REPO_ID }}
         GITHUB_BRANCH: ${{ secrets.BRANCH }}
-      run: terraform apply -auto-approve -var "vercel_api_token=$VERCEL_API_TOKEN" -var "vercel_project_name=$VERCEL_PROJECT_NAME" -var "github_repo_id=$REPO_ID" -var "github_branch=$BRANCH"
+      run: terraform apply -auto-approve -var "vercel_api_token=$VERCEL_API_TOKEN" -var "vercel_project_name=$VERCEL_PROJECT_NAME" -var "repo_id=$REPO_ID" -var "branch=$BRANCH"
