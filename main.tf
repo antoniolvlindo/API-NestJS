@@ -12,8 +12,7 @@ provider "vercel" {
 }
 
 resource "vercel_project" "project" {
-  name      = var.vercel_project_name
-  framework = "docker"
+  name = var.vercel_project_name
 }
 
 resource "vercel_deployment" "deployment" {
