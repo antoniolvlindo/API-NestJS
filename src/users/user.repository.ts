@@ -17,12 +17,8 @@ export class UserRepository {
 
     private users: User[] = [];
   
-    public findByEmail(email: string): User {
-      const user = this.users.find(user => user.email === email);
-      if (!user) {
-        throw new NotFoundException(`User with email ${email} not found`);
-      }
-      return user;
+    public async findByEmail(email: string): Promise<User | undefined> {
+      return this.repo.findOne({ where: { email } });
     }
 
     public findByEmailCreate(email: string): User | undefined {

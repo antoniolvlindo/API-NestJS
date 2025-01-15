@@ -23,20 +23,22 @@ export class UsersService {
   ) {}
 
   public async create(createUser: CreateUserDto): Promise<User> {
-    const emailExists = this.userRepository.findByEmailCreate(createUser.email);
+    const emailExists = await this.userRepository.findByEmailCreate(createUser.email);
     if (emailExists) {
       throw new UnauthorizedException('Email já cadastrado');
     }
-    const usernameExists = this.userRepository.findByUsernameCreate(createUser.username);
+  
+    const usernameExists = await this.userRepository.findByUsernameCreate(createUser.username);
     if (usernameExists) {
       throw new UnauthorizedException('Username já cadastrado');
     }
+  
     const hashPassword = await bcrypt.hash(createUser.password, 10);
     return this.userRepository.create({ ...createUser, password: hashPassword });
   }
 
   public async login(email: string, password: string) {
-    const user = this.userRepository.findByEmail(email);
+    const user = await this.userRepository.findByEmail(email);
     if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException('Credenciais inválidas');
     }
