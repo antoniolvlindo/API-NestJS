@@ -22,7 +22,7 @@ export class UsersController {
   }
 
   @Get('filter')
-  findAllFiltered(@Query() query: UserQueryDTO) {
+  async findAllWithFilters(@Query() query: UserQueryDTO) {
     return this.usersService.findAllWithFilters(query);
   }
 

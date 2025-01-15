@@ -71,9 +71,9 @@ export class UsersService {
     return this.userRepository.findAllWithFilters(query);
   }
 
-public async findOne (id:string): Promise<User> {
-  return await this.userRepository.findOne(id);
-}
+  public async findOne (id:string): Promise<User> {
+    return await this.userRepository.findOne(id);
+  }
 
   public async update(id: string, updateUser: UpdateUserDto): Promise<User> {
     return await this.userRepository.update(id, updateUser);

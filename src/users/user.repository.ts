@@ -52,33 +52,45 @@ export class UserRepository {
       const { pageIndex, pageSize, sortBy, sortOrder, searchTerm } = filters;
   
       const currentPage = parseInt(pageIndex, 10) > 0 ? parseInt(pageIndex, 10) : 1;
-      const recordsPerPage = parseInt(pageSize, 10) > 0 ? parseInt(pageSize, 10) : 10;
+      const recordsPerPage =
+        parseInt(pageSize, 10) > 0 ? parseInt(pageSize, 10) : 10;
       const skip = (currentPage - 1) * recordsPerPage;
   
       // Cria o query builder
       const queryBuilder = this.repo.createQueryBuilder('user');
   
-      // Exemplo: Filtra apenas usuários ativos
+      // Filtra apenas usuários ativos
       queryBuilder.where('user.active = :active', { active: true });
   
       // Filtro de busca
       if (searchTerm) {
         queryBuilder.andWhere(
           new Brackets((qb) => {
-            qb.where('user.username ILIKE :searchTerm', { searchTerm: `%${searchTerm}%` })
-              .orWhere('user.email ILIKE :searchTerm', { searchTerm: `%${searchTerm}%` })
-              .orWhere('user.firstName ILIKE :searchTerm', { searchTerm: `%${searchTerm}%` })
-              .orWhere('user.lastName ILIKE :searchTerm', { searchTerm: `%${searchTerm}%` });
+            qb.where('user.username ILIKE :searchTerm', {
+              searchTerm: `%${searchTerm}%`,
+            })
+              .orWhere('user.email ILIKE :searchTerm', {
+                searchTerm: `%${searchTerm}%`,
+              })
+              .orWhere('user.firstName ILIKE :searchTerm', {
+                searchTerm: `%${searchTerm}%`,
+              })
+              .orWhere('user.lastName ILIKE :searchTerm', {
+                searchTerm: `%${searchTerm}%`,
+              });
           }),
         );
       }
   
-      // Conta total de usuários
+      // Conta total de usuários que atendem aos filtros
       const totalRecords = await queryBuilder.getCount();
   
-      // Ordenação, paginação e retorno
+      // Ordenação e paginação
       const users = await queryBuilder
-        .orderBy(`user.${sortBy || 'createdAt'}`, sortOrder?.toUpperCase() === 'ASC' ? 'ASC' : 'DESC')
+        .orderBy(
+          sortBy ? `user.${sortBy}`: 'user.username',
+          sortOrder?.toUpperCase() === 'ASC' ? 'ASC' : 'DESC',
+        )
         .skip(skip)
         .take(recordsPerPage)
         .getMany();
