@@ -84,7 +84,9 @@ public async findOne (id:string): Promise<User> {
     return await this.userRepository.remove(id);
  }
 
-  public search(query: UserQueryDTO): User[] {
-    return this.userRepository.userSearch(query);
+  public async search(query: UserQueryDTO): Promise<User[]> {
+    const result = await this.userRepository.findAllWithFilters(query);
+    return result.data;
   }
+
 }

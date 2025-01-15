@@ -174,33 +174,42 @@ export class UserRepository {
       }
     }
 
-    public userSearch(query: UserQueryDTO): User[] {
-      let filteredUsers = this.users;
-    
-      if (query.searchTerm) {
-        filteredUsers = filteredUsers.filter(user =>
-          user.username.includes(query.searchTerm) ||
-          user.email.includes(query.searchTerm) ||
-          user.firstName.includes(query.searchTerm) ||
-          user.lastName.includes(query.searchTerm)
+    public async searchUsers(query: UserQueryDTO): Promise<{
+      data: User[];
+      total: number;
+      page: number;
+      limit: number;
+    }> {
+      const {searchTerm, sortBy, sortOrder, pageIndex, pageSize} = query;
+      const currentPage = parseInt(pageIndex, 10) > 0 ? parseInt(pageIndex, 10) : 1;
+      const recordsPerPage = parseInt(pageSize, 10) > 0 ? parseInt(pageSize, 10) : 10;
+      const skip = (currentPage - 1) * recordsPerPage;
+      
+      const queryBuilder = this.repo.createQueryBuilder('user');
+
+      if(searchTerm){
+        queryBuilder.andWhere(
+          new Brackets ((qb) => {
+          qb.where('user.username ILIKE :searchTerm', {searchTerm: `%${searchTerm}%`}) 
+          .orWhere('user.email ILIKE :searchTerm', {searchTerm: `%${searchTerm}%`})
+          .orWhere('user.firstName ILIKE :searchTerm', {searchTerm: `%${searchTerm}%`})
+          .orWhere('user.lastName ILIKE :searchTerm', {searchTerm: `%${searchTerm}%`})
+          }),
         );
       }
-    
-      if (query.sortBy) {
-        filteredUsers.sort((a, b) => {
-          if (query.sortOrder === 'DESC') {
-            return a[query.sortBy] < b[query.sortBy] ? 1 : -1;
-          }
-          return a[query.sortBy] > b[query.sortBy] ? 1 : -1;
-        });
+      const totalRecords = await queryBuilder.getCount();
+      const users = await queryBuilder
+      .orderBy(`user.${sortBy || 'createdAt'}`, sortOrder?.toUpperCase() === 'ASC' ? 'ASC' : 'DESC')
+      .skip(skip)
+      .take(recordsPerPage)
+      .getMany();
+      
+      return{
+        data: users,
+        total: totalRecords,
+        page: currentPage,
+        limit: recordsPerPage,
       }
-    
-      const pageIndex = parseInt(query.pageIndex, 10) || 0;
-      const pageSize = parseInt(query.pageSize, 10) || 10;
-      const start = pageIndex * pageSize;
-      const end = start + pageSize;
-
-      return filteredUsers.slice(start, end);
     }
 
 }
