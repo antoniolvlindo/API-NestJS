@@ -99,27 +99,9 @@ export class UserRepository {
       };
     }
 
-    private convertToUser(createUser: CreateUserDto): User {
-        const user = new User();
-        user.username = createUser.username;
-        user.password = createUser.password;
-        user.firstName = createUser.firstName;
-        user.lastName = createUser.lastName;
-        user.email = createUser.email;
-        user.active = true;
-        return user;
-    }
-
     public async create(createUser: CreateUserDto): Promise<User> {
       const user = this.repo.create(createUser);
       return await this.repo.save(user);
-    }
-
-    public findAllPaginated(page: number, limit: number): [User[], number] {
-      const start = (page - 1) * limit;
-      const end = start + limit;
-      const result = this.users.slice(start, end);
-      return [result, this.users.length];
     }
 
     public async findAllWithPagination(
@@ -151,11 +133,6 @@ export class UserRepository {
         currentPage: page,
         totalItems,
       };
-    }
-
-
-    public findAll(): User[] {
-        return this.users;
     }
 
     public async findOne(id: string): Promise<User> {

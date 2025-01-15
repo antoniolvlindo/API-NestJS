@@ -57,18 +57,6 @@ export class UsersService {
     return createdUsers;
   }
 
-  findAll({ page, limit }: { page: number; limit: number }) {
-    const [result, total] = this.userRepository.findAllPaginated(page, limit);
-    const totalPages = Math.ceil(total / limit);
-
-    return {
-      data: result,
-      total,
-      page,
-      totalPages,
-    };
-  }
-
   public async findAllWithFilters(query: UserQueryDTO) {
     return this.userRepository.findAllWithFilters(query);
   }

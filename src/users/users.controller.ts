@@ -36,11 +36,6 @@ export class UsersController {
     return this.usersService.search(query);
   }
 
-  @Get()
-  findAll(@Query('page') page: number = 1, @Query('limit') limit: number = 10) {
-    return this.usersService.findAll({ page, limit });
-  }
-
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
